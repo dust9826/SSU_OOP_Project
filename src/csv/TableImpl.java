@@ -58,7 +58,8 @@ class TableImpl implements Table{
 
     @Override
     public void print() {
-
+        System.out.println(columns.get(0).getNumericMax());
+        System.out.println(columns.get(0).getNumericMin());
     }
 
     @Override
