@@ -22,7 +22,7 @@ class ColumnImpl implements Column{
 
     @Override
     public String getValue(int index) {
-        return null;
+        return values.get(index);
     }
 
     @Override
@@ -52,12 +52,22 @@ class ColumnImpl implements Column{
 
     @Override
     public boolean isNumericColumn() {
-        return false;
+        try {
+            for(String s : values)
+                Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @Override
     public long getNullCount() {
-        return 0;
+        int cnt = 0;
+        for(String s : values)
+            if(s.equals(""))
+                cnt++;
+        return cnt;
     }
 
     @Override

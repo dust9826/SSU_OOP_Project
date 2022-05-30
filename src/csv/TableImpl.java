@@ -174,7 +174,10 @@ class TableImpl implements Table{
         ret += String.format(" # | %12s | %14s | %7s\n", "Column", "Non-Null Count", "Dtype");
         for(int i = 0; i < columns.size(); i++)
         {
-            ret += String.format("%2d | %12s | %14s | %7s\n", i, columns.get(i).getHeader(), columns.get(i).getNullCount(), columns.get(i).getStd());
+            String header = columns.get(i).getHeader();
+            int nnc = columns.get(i).count() - (int)columns.get(i).getNullCount();
+            boolean b = columns.get(i).isNumericColumn();
+            ret += String.format("%2d | %12s | %14s | %7s %d\n", i, header, nnc, columns.get(i).getStd(), b ? 1 : 0);
         }
         return ret;
     }
