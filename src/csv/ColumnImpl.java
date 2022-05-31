@@ -22,22 +22,23 @@ class ColumnImpl implements Column{
 
     @Override
     public String getValue(int index) {
-        return null;
+        return values.get(index);
     }
 
     @Override
     public <T extends Number> T getValue(int index, Class<T> t) {
+        System.out.println(t.getClass());
         return null;
     }
 
     @Override
     public void setValue(int index, String value) {
-
+        values.set(index, value);
     }
 
     @Override
     public <T extends Number> void setValue(int index, T value) {
-
+        values.set(index, value.toString());
     }
 
     @Override
@@ -52,32 +53,84 @@ class ColumnImpl implements Column{
 
     @Override
     public boolean isNumericColumn() {
-        return false;
+        try {
+            for(String s : values)
+                Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @Override
     public long getNullCount() {
-        return 0;
+        int cnt = 0;
+        for(String s : values)
+            if(s.equals(""))
+                cnt++;
+        return cnt;
     }
 
     @Override
     public long getNumericCount() {
-        return 0;
+        int cnt = 0;
+        for(String s : values)
+        {
+            try {
+                Double.parseDouble(s);
+                cnt++;
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        return cnt;
     }
 
     @Override
     public double getNumericMin() {
-        return 0;
+        double ret = 10000000;
+        for(String s : values)
+        {
+            try {
+                double t = Double.parseDouble(s);
+                if(ret > t)
+                    ret = t;
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        return ret;
     }
 
     @Override
     public double getNumericMax() {
-        return 0;
+        double ret = 0;
+        for(String s : values)
+        {
+            try {
+                double t = Double.parseDouble(s);
+                if(ret < t)
+                    ret = t;
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        return ret;
     }
 
     @Override
     public double getMean() {
-        return 0;
+        double sum = 0;
+        for(String s : values)
+        {
+            try {
+                double t = Double.parseDouble(s);
+                sum += t;
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        return sum / values.size();
     }
 
     @Override
