@@ -22,7 +22,49 @@ public class CSVs {
                 aLine = Arrays.asList(lineArr);
                 csvList.add(aLine);
             }
-            table = new TableImpl(csvList);
+
+            int cSize = csvList.get(0).size();
+            int rSize = csvList.size();
+
+            List<List<String>> csvCol = new ArrayList<>();
+            for(int i=0; i<cSize; i++)
+                csvCol.add(new ArrayList<>());
+            for(int i=0; i<rSize; i++)
+            {
+                List<String> rowData = csvList.get(i);
+                String temp = "";
+                int cIdx = 0;
+                for(int j=0; j<rowData.size(); j++)
+                {
+                    temp += rowData.get(j);
+                    if(!temp.equals("") && temp.charAt(0) == '"')
+                    {
+                        int cnt, length = temp.length();
+                        for(cnt = 0;; cnt++)
+                            if(temp.charAt(length - cnt - 1) != '"')
+                                break;
+                        if(cnt % 2 == 0)
+                        {
+                            temp += ",";
+                            continue;
+                        }
+                        String t = "";
+                        for(int k=1; k<temp.length()-1; k++)
+                        {
+                            if(temp.charAt(k) == '"')
+                                k++;
+                            t += temp.charAt(k);
+                        }
+                        temp = t;
+                    }
+                    csvCol.get(cIdx++).add(temp);
+                    temp = "";
+                }
+                while(cIdx < cSize)
+                    csvCol.get(cIdx++).add("");
+            }
+
+            table = new TableImpl(csvCol);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -43,13 +85,15 @@ public class CSVs {
      * @return 새로운 Table 객체를 반환한다. 즉, 첫 번째 매개변수 Table은 변경되지 않는다.
      */
     public static Table sort(Table table, int byIndexOfColumn, boolean isAscending, boolean isNullFirst) {
-        return null;
+        Table newTable = new TableImpl(table);
+        return newTable.sort(byIndexOfColumn, isAscending, isNullFirst);
     }
 
     /**
      * @return 새로운 Table 객체를 반환한다. 즉, 첫 번째 매개변수 Table은 변경되지 않는다.
      */
     public static Table shuffle(Table table) {
-        return null;
+        Table newTable = new TableImpl(table);
+        return newTable.shuffle();
     }
 }
